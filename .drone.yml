@@ -15,7 +15,7 @@ steps:
     image: registry.gitlab.com/ohfp/manjaro-arm-docker
     commands:
       - pacman --noconfirm -Syu --needed base-devel git
-      - git clone https://gitlab.com/librewolf-community/browser/arch.git librewolf
+      - git clone https://github.com/lsfxz/librewolf-build librewolf
       - chown -R nobody ./librewolf
       - cd librewolf
       - "echo 'nobody ALL=(ALL) NOPASSWD: /usr/bin/pacman' >> /etc/sudoers"
@@ -45,7 +45,7 @@ steps:
     image: archlinux/base:latest
     commands:
       - pacman --noconfirm -Syu --needed base-devel git
-      - git clone https://gitlab.com/librewolf-community/browser/arch.git librewolf
+      - git clone https://github.com/lsfxz/librewolf-build librewolf
       - chown -R nobody ./librewolf
       - cd librewolf
       - "echo 'nobody ALL=(ALL) NOPASSWD: /usr/bin/pacman' >> /etc/sudoers"
