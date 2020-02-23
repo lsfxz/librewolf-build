@@ -1,0 +1,59 @@
+---
+kind: pipeline
+type: docker
+name: build_aarch64
+
+clone:
+  disable: true
+
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+  - name: build
+    image: registry.gitlab.com/ohfp/manjaro-arm-docker
+    commands:
+      - pacman --noconfirm -Syu --needed base-devel git
+      - git clone https://gitlab.com/librewolf-community/browser/arch.git librewolf
+      - chown -R nobody ./librewolf
+      - cd librewolf
+      - "echo 'nobody ALL=(ALL) NOPASSWD: /usr/bin/pacman' >> /etc/sudoers"
+      - usermod -e '' nobody
+      - mkdir -p /home/nobody && chown -R nobody /home/nobody
+      - usermod -d /home/nobody nobody
+      - sudo -u nobody -E -H makepkg --noconfirm --nosign --syncdeps --cleanbuild --skippgpcheck -p PKGBUILD.aarch64
+
+trigger:
+  branch:
+    - master
+
+---
+kind: pipeline
+type: docker
+name: build_x86_64
+
+clone:
+  disable: true
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: build
+    image: archlinux/base:latest
+    commands:
+      - pacman --noconfirm -Syu --needed base-devel git
+      - git clone https://gitlab.com/librewolf-community/browser/arch.git librewolf
+      - chown -R nobody ./librewolf
+      - cd librewolf
+      - "echo 'nobody ALL=(ALL) NOPASSWD: /usr/bin/pacman' >> /etc/sudoers"
+      - usermod -e '' nobody
+      - mkdir -p /home/nobody && chown -R nobody /home/nobody
+      - usermod -d /home/nobody nobody
+      - sudo -u nobody -E -H makepkg --noconfirm --nosign --syncdeps --cleanbuild --skippgpcheck
+
+trigger:
+  branch:
+    - master
